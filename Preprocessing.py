@@ -4,6 +4,23 @@ from sklearn.impute import SimpleImputer
 from sklearn.preprocessing import MinMaxScaler
 
 
+def check_duplicate_rows(df, remove_duplicates=False):
+    # Check for duplicate rows
+    duplicate_rows = df[df.duplicated()]
+
+    print("------------------Checking for Duplicate Rows------------------")
+    if not duplicate_rows.empty:
+        print(f"Number of duplicate rows: {len(duplicate_rows)}")
+        print("Duplicate Rows:\n", duplicate_rows)
+    else:
+        print("No duplicate rows found.")
+
+    # Remove duplicates if specified
+    if remove_duplicates:
+        df = df.drop_duplicates()
+        print("\nDuplicate rows removed.")
+
+    return df
 def handle_numerical_missing_data_and_normalize(ds):
     # Identify numerical features (excluding the last column)
     numerical_features = ds.iloc[:, :-1].select_dtypes(include=[np.number]).columns.tolist()
@@ -39,23 +56,40 @@ def handle_numerical_missing_data_and_normalize(ds):
 
 
 def handle_categorical_missing_data(df):
+
     # Extract categorical features
     categorical_features = df.select_dtypes(include=['object']).columns.tolist()
-
     print("------------------Extracting Categorical Features------------------")
-    # print("Categorical Features:", categorical_features)
+    print("Categorical Features:", categorical_features)
 
-    # Check if there are NaN values in categorical features
-    has_nans = df[categorical_features].isnull().any().any()
-    print("Are there NaN values in categorical features?:", has_nans)
+    total_rows = len(df)
+    threshold = total_rows* 0.01  # 1%
 
-    # Handle missing values if NaNs exist
-    if has_nans:
-        imp_freq = SimpleImputer(missing_values=np.nan, strategy="most_frequent")
-        df[categorical_features] = imp_freq.fit_transform(df[categorical_features])
-        print("Categorical features after handling missing data (most frequent):")
-        print(df[categorical_features])
+    for feature in categorical_features:
+        print(f"\nProcessing Feature: {feature}")
 
-    return has_nans, df
+        # Get value counts for the feature
+        value_counts = df[feature].value_counts(dropna=False)
+        print(f"Value Counts:\n{value_counts}")
+
+        # Identify frequent and infrequent values
+        frequent_values = value_counts[value_counts > threshold].index
+        infrequent_values = value_counts[value_counts <= threshold].index
+        print(f"Frequent Values (Threshold > {threshold:.2f}): {list(frequent_values)}")
+        print(f"Infrequent Values (Threshold <= {threshold:.2f}): {list(infrequent_values)}")
+
+        # Replace infrequent values and NaNs with the most frequent value
+        most_frequent_value = value_counts.idxmax()
+        df[feature] = df[feature].apply(
+            lambda x: x if x in frequent_values else most_frequent_value
+        )
+
+        print(f"Updated Feature Values:\n{df[feature].value_counts(dropna=False)}")
+        print("-------------------------------------------------------------------")
+
+
+    return df
+
+
 
 
