@@ -1,13 +1,8 @@
 import pandas as pd
 import Preprocessing
 df = pd.read_csv("healthcare-dataset-stroke-data.csv")
-
-# Example usage:
-# Load the data
-df = pd.read_csv("healthcare-dataset-stroke-data.csv")
-
+print(df)
 # Check for and handle missing data in categorical features
 has_nans, df = Preprocessing.handle_categorical_missing_data(df)
-# print("------------------Final DataFrame------------------")
-# print("Were there NaN values?:", has_nans)
-# print(df)
+df=Preprocessing.handle_numerical_missing_data_and_normalize(df)
+
