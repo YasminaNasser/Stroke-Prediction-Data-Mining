@@ -1,16 +1,13 @@
-# This is a sample Python script.
+import pandas as pd
+import Preprocessing
+df = pd.read_csv("healthcare-dataset-stroke-data.csv")
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+# Example usage:
+# Load the data
+df = pd.read_csv("healthcare-dataset-stroke-data.csv")
 
-
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+# Check for and handle missing data in categorical features
+has_nans, df = Preprocessing.handle_categorical_missing_data(df)
+# print("------------------Final DataFrame------------------")
+# print("Were there NaN values?:", has_nans)
+# print(df)
