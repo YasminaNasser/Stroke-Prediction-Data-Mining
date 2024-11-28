@@ -90,6 +90,45 @@ def handle_categorical_missing_data(df):
 
     return df
 
+def detect_outliers(df, columns):
+    # Exclude the 'id' column if it exists
+    if 'id' in columns:
+        columns.remove('id')
+
+    outlier_indices = {}
+
+    print("------------------Detecting Outliers------------------")
+    for column in columns:
+        Q1 = df[column].quantile(0.25)  # First quartile
+        Q3 = df[column].quantile(0.75)  # Third quartile
+        IQR = Q3 - Q1                   # Interquartile range
+        lower_bound = Q1 - 1.5 * IQR
+        upper_bound = Q3 + 1.5 * IQR
+
+        # Identify outliers
+        outliers = df[(df[column] < lower_bound) | (df[column] > upper_bound)]
+        if not outliers.empty:
+            print(f"Outliers in column '{column}':")
+            print(outliers)
+            outlier_indices[column] = outliers.index.tolist()
+        else:
+            print(f"No outliers detected in column '{column}'.")
+
+    return outlier_indices
+
+def cap_outliers(df, columns):
+    capped_df = df.copy()
+    for column in columns:
+        Q1 = df[column].quantile(0.25)
+        Q3 = df[column].quantile(0.75)
+        IQR = Q3 - Q1
+        lower_bound = Q1 - 1.5 * IQR
+        upper_bound = Q3 + 1.5 * IQR
+
+        # Cap values outside the bounds
+        capped_df[column] = np.where(capped_df[column] < lower_bound, lower_bound,
+                                     np.where(capped_df[column] > upper_bound, upper_bound, capped_df[column]))
+    return capped_df
 
 
 
