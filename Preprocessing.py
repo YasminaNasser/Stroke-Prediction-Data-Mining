@@ -7,7 +7,6 @@ from sklearn.preprocessing import MinMaxScaler
 def check_duplicate_rows(df, remove_duplicates=False):
     # Check for duplicate rows
     duplicate_rows = df[df.duplicated()]
-
     print("------------------Checking for Duplicate Rows------------------")
     if not duplicate_rows.empty:
         print(f"Number of duplicate rows: {len(duplicate_rows)}")
@@ -21,6 +20,8 @@ def check_duplicate_rows(df, remove_duplicates=False):
         print("\nDuplicate rows removed.")
 
     return df
+
+
 def handle_numerical_missing_data_and_normalize(ds):
     # Identify numerical features (excluding the last column)
     numerical_features = ds.iloc[:, :-1].select_dtypes(include=[np.number]).columns.tolist()
@@ -54,16 +55,14 @@ def handle_numerical_missing_data_and_normalize(ds):
     return ds
 
 
-
 def handle_categorical_missing_data(df):
-
     # Extract categorical features
     categorical_features = df.select_dtypes(include=['object']).columns.tolist()
     print("------------------Extracting Categorical Features------------------")
     print("Categorical Features:", categorical_features)
 
     total_rows = len(df)
-    threshold = total_rows* 0.01  # 1%
+    threshold = total_rows * 0.01  # 1%
 
     for feature in categorical_features:
         print(f"\nProcessing Feature: {feature}")
@@ -87,14 +86,10 @@ def handle_categorical_missing_data(df):
         print(f"Updated Feature Values:\n{df[feature].value_counts(dropna=False)}")
         print("-------------------------------------------------------------------")
 
-
     return df
 
-def detect_outliers(df, columns):
-    # Exclude the 'id' column if it exists
-    if 'id' in columns:
-        columns.remove('id')
 
+def detect_outliers(df, columns):
     outlier_indices = {}
 
     print("------------------Detecting Outliers------------------")
@@ -116,6 +111,7 @@ def detect_outliers(df, columns):
 
     return outlier_indices
 
+
 def cap_outliers(df, columns):
     capped_df = df.copy()
     for column in columns:
@@ -129,6 +125,3 @@ def cap_outliers(df, columns):
         capped_df[column] = np.where(capped_df[column] < lower_bound, lower_bound,
                                      np.where(capped_df[column] > upper_bound, upper_bound, capped_df[column]))
     return capped_df
-
-
-

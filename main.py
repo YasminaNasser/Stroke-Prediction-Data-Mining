@@ -2,20 +2,24 @@ import pandas as pd
 import Preprocessing  # Assuming preprocessing code is in Preprocessing.py
 import numpy as np
 
-
 # Load the dataset
 df = pd.read_csv("healthcare-dataset-stroke-data.csv")
 print(df)
+
+# Drop the 'id' column
+if 'id' in df.columns:
+    df = df.drop(columns=['id'])
+    print("\nDropped 'id' column.")
 
 # Preprocessing
 df = Preprocessing.check_duplicate_rows(df)
 df = Preprocessing.handle_categorical_missing_data(df)
 df = Preprocessing.handle_numerical_missing_data_and_normalize(df)
 
-# Identify numerical columns (including potential 'id' column)
+# Identify numerical columns
 numerical_columns = df.select_dtypes(include=[np.number]).columns.tolist()
 
-# Detect outliers while excluding the 'id' column
+# Detect outliers
 outlier_indices = Preprocessing.detect_outliers(df, numerical_columns)
 
 # Save outliers to a CSV file
@@ -36,5 +40,3 @@ print("\nDataset without outliers saved to 'data_without_outliers.csv'.")
 
 df_capped_outliers.to_csv("data_capped_outliers.csv", index=False)
 print("\nDataset with capped outliers saved to 'data_capped_outliers.csv'.")
-
-
