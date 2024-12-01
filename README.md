@@ -29,6 +29,13 @@ The goal is to build a robust machine learning pipeline by preprocessing the dat
   - **SMOTE (Synthetic Minority Oversampling Technique)**.  
   - **Undersampling the majority class**.  
 
+### 🔹 Visualization  
+Gain insights into data and results with visualizations:  
+- Distributions of age, BMI, and glucose levels.  
+- Correlation heatmaps to understand feature relationships.  
+- Target variable distribution to highlight class imbalance.  
+- Feature importance plots using SHAP or other techniques.
+
 ### 🔹 Predictive Modeling  
 - Train and evaluate machine learning models, including:  
   - Logistic Regression  
@@ -38,13 +45,6 @@ The goal is to build a robust machine learning pipeline by preprocessing the dat
   - Accuracy  
   - Precision, Recall, F1-score  
   - ROC-AUC  
-
-### 🔹 Visualization  
-Gain insights into data and results with visualizations:  
-- Distributions of age, BMI, and glucose levels.  
-- Correlation heatmaps to understand feature relationships.  
-- Target variable distribution to highlight class imbalance.  
-- Feature importance plots using SHAP or other techniques.  
 
 ---
 
